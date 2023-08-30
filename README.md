@@ -1,6 +1,6 @@
 ## VC Client
 
-[English](/README_en.md)
+[Japanese](/README_ja.md)
 
 ## What's New!
 
@@ -19,63 +19,60 @@
     - server mode: change chunk size causes tune change
     - show blank icon
 
-# VC Client とは
+# What is VC Client
 
-1. 各種音声変換 AI(VC, Voice Conversion)を用いてリアルタイム音声変換を行うためのクライアントソフトウェアです。サポートしている音声変換 AI は次のものになります。
+1. This is a client software for performing real-time voice conversion using various Voice Conversion (VC) AI. The supported AI for voice conversion are as follows.
 
-- サポートする音声変換 AI （サポート VC）
-  - [MMVC](https://github.com/isletennos/MMVC_Trainer)
-  - [so-vits-svc](https://github.com/svc-develop-team/so-vits-svc)
-  - [RVC(Retrieval-based-Voice-Conversion)](https://github.com/liujing04/Retrieval-based-Voice-Conversion-WebUI)
-  - [DDSP-SVC](https://github.com/yxlllc/DDSP-SVC)
+- [MMVC](https://github.com/isletennos/MMVC_Trainer)
+- [so-vits-svc](https://github.com/svc-develop-team/so-vits-svc)
+- [RVC(Retrieval-based-Voice-Conversion)](https://github.com/liujing04/Retrieval-based-Voice-Conversion-WebUI)
+- [DDSP-SVC](https://github.com/yxlllc/DDSP-SVC)
 
-2. 本ソフトウェアは、ネットワークを介した利用も可能であり、ゲームなどの高負荷なアプリケーションと同時に使用する場合などに音声変換処理の負荷を外部にオフロードすることができます。
+2. Distribute the load by running Voice Changer on a different PC
+   The real-time voice changer of this application works on a server-client configuration. By running the MMVC server on a separate PC, you can run it while minimizing the impact on other resource-intensive processes such as gaming commentary.
 
 ![image](https://user-images.githubusercontent.com/48346627/206640768-53f6052d-0a96-403b-a06c-6714a0b7471d.png)
 
-3. 複数のプラットフォームに対応しています。
+3. Cross-platform compatibility
+   Supports Windows, Mac (including Apple Silicon M1), Linux, and Google Colaboratory.
 
-- Windows, Mac(M1), Linux, Google Colab (MMVC のみ)
+# usage
 
-# 使用方法
+This is an app for performing voice changes with MMVC and so-vits-svc.
 
-大きく 2 つの方法でご利用できます。難易度順に次の通りです。
+It can be used in two main ways, in order of difficulty:
 
-- 事前ビルド済みの Binary での利用
-- Docker や Anaconda など環境構築を行った上での利用
+- Using a pre-built binary
+- Setting up an environment with Docker or Anaconda and using it
 
-本ソフトウェアや MMVC になじみの薄い方は上から徐々に慣れていくとよいと思います。
+## (1) Usage with pre-built binaries
 
-## (1) 事前ビルド済みの Binary での利用
+- You can download and run executable binaries.
 
-- 実行形式のバイナリをダウンロードして実行することができます。
+- Please see [here](tutorials/tutorial_rvc_en_latest.md) for the tutorial. ([troubule shoot](https://github.com/w-okada/voice-changer/blob/master/tutorials/trouble_shoot_communication_ja.md))
 
-- チュートリアルは[こちら](tutorials/tutorial_rvc_ja_latest.md)をご覧ください。([ネットワークのトラブルシュート](https://github.com/w-okada/voice-changer/blob/master/tutorials/trouble_shoot_communication_ja.md))
-
-- [Google Colaboratory](https://github.com/w-okada/voice-changer/blob/master/Realtime_Voice_Changer_on_Colab.ipynb) で簡単にお試しいただけるようになりました。左上の Open in Colab のボタンから起動できます。
+- It's now easy to try it out on [Google Colaboratory](https://github.com/w-okada/voice-changer/blob/master/Realtime_Voice_Changer_on_Colab.ipynb) (requires a ngrok account). You can launch it from the 'Open in Colab' button in the top left corner.
 
 <img src="https://github.com/w-okada/voice-changer/assets/48346627/3f092e2d-6834-42f6-bbfd-7d389111604e" width="400" height="150">
 
-- Windows 版と Mac 版を提供しています。
+- We offer Windows and Mac versions.
 
-  - Windows かつ Nvidia の GPU をご使用の方は、ONNX(cpu,cuda), PyTorch(cpu,cuda)をダウンロードしてください。
-  - Windows かつ AMD/Intel の GPU をご使用の方は、ONNX(cpu,DirectML), PyTorch(cpu,cuda)をダウンロードしてください。AMD/Intel の GPU は onnx のモデルを使用する場合のみ有効になります。
-  - いずれの GPU のサポート状況についても、PyTorch、Onnxruntime がサポートしている場合のみ有効になります。
-  - Windows で GPU をご使用にならない方は、ONNX(cpu,cuda), PyTorch(cpu,cuda)をダウンロードしてください。
+  - If you are using a Windows and Nvidia GPU, please download ONNX (cpu, cuda), PyTorch (cpu, cuda).
+  - If you are using a Windows and AMD/Intel GPU, please download ONNX (cpu, DirectML) and PyTorch (cpu, cuda). AMD/Intel GPUs are only enabled for ONNX models.
+  - In either case, for GPU support, PyTorch and Onnxruntime are only enabled if supported.
+  - If you are not using a GPU on Windows, please download ONNX (cpu, cuda) and PyTorch (cpu, cuda).
 
-- Windows 版は、ダウンロードした zip ファイルを解凍して、`start_http.bat`を実行してください。
+- For Windows user, after unzipping the downloaded zip file, please run the `start_http.bat` file corresponding to your VC.
 
-- Mac 版はダウンロードファイルを解凍したのちに、`startHttp.command`を実行してください。開発元を検証できない旨が示される場合は、再度コントロールキーを押してクリックして実行してください(or 右クリックから実行してください)。
+- For Mac version, after unzipping the downloaded file, double-click the `startHttp.command` file corresponding to your VC. If a message indicating that the developer cannot be verified is displayed, please press the control key and click to run it again (or right-click to run it).
 
-- 初回起動時は各種データをダウンロードします。ダウンロードに時間がかかる可能性があります。ダウンロードが完了すると、ブラウザが立ち上がります。
+- If you are connecting remotely, please use the `.command` file (Mac) or `.bat` file (Windows) with https instead of http.
 
-- リモートから接続する場合は、`.bat`ファイル(win)、`.command`ファイル(mac)の http が https に置き換わっているものを使用してください。
+- The encoder of DDPS-SVC only supports hubert-soft.
 
-- DDPS-SVC の encoder は hubert-soft のみ対応です。
+- Download (When you cannot download from google drive, try [hugging_face](https://huggingface.co/wok000/vcclient000/tree/main))
 
-- ダウンロードはこちらから。
-
-| Version     | OS  | フレームワーク                        | link                                                                                                                                                            | サポート VC                                                               | サイズ |
+| Version     | OS  | Framework                             | link                                                                                                                                                            | support VC                                                                | size   |
 | ----------- | --- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------ |
 | v.1.5.3.13  | mac | ONNX(cpu), PyTorch(cpu,mps)           | [google](https://drive.google.com/uc?id=1nD1jsDhqKtRt1m6LYZW9Xx02guVTYECi&export=download), [hugging face](https://huggingface.co/wok000/vcclient000/tree/main) | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, RVC                          | 797MB  |
 |             | win | ONNX(cpu,cuda), PyTorch(cpu,cuda)     | [google](https://drive.google.com/uc?id=1MCqHpJEzqo17QmaTRsvg74KVh-4g8S1o&export=download), [hugging face](https://huggingface.co/wok000/vcclient000/tree/main) | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, RVC, DDSP-SVC, Diffusion-SVC | 3240MB |
@@ -90,110 +87,76 @@
 |             | win | ONNX(cpu,cuda), PyTorch(cpu,cuda)     | [google](https://drive.google.com/uc?id=1aOkc-QhtAj11gI8i335mHhNMUSESeJ5J&export=download), [hugging face](https://huggingface.co/wok000/vcclient000/tree/main) | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, RVC, DDSP-SVC, Diffusion-SVC | 3237MB |
 |             | win | ONNX(cpu,DirectML), PyTorch(cpu,cuda) | [google](https://drive.google.com/uc?id=16g33cZ925HNty_0Hly7Aw_nXlQlgqxDC&export=download), [hugging face](https://huggingface.co/wok000/vcclient000/tree/main) | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, RVC, DDSP-SVC, Diffusion-SVC | 3122MB |
 
-(\*1) Google Drive からダウンロードできない方は[hugging_face](https://huggingface.co/wok000/vcclient000/tree/main)からダウンロードしてみてください
-(\*2) 開発者が AMD のグラフィックボードを持っていないので動作確認していません。onnxruntime-directml を同梱しただけのものです。
-(\*3) 解凍や起動が遅い場合、ウィルス対策ソフトのチェックが走っている可能性があります。ファイルやフォルダを対象外にして実行してみてください。（自己責任です）
+(\*1) You can also download from [hugging_face](https://huggingface.co/wok000/vcclient000/tree/main)
+(\*2) The developer does not have an AMD graphics card, so it has not been tested. This package only includes onnxruntime-directml.
+(\*3) If unpacking or starting is slow, there is a possibility that virus checking is running on your antivirus software. Please try running it with the file or folder excluded from the target. (At your own risk)
 
-## (2) Docker や Anaconda など環境構築を行った上での利用
+## (2) Usage after setting up the environment such as Docker or Anaconda
 
-本リポジトリをクローンして利用します。Windows では WSL2 の環境構築が必須になります。また、WSL2 上で Docker もしくは Anaconda などの仮想環境の構築が必要となります。Mac では Anaconda などの Python の仮想環境の構築が必要となります。事前準備が必要となりますが、多くの環境においてこの方法が一番高速で動きます。**<font color="red"> GPU が無くてもそこそこ新しい CPU であれば十分動く可能性があります </font>（下記のリアルタイム性の節を参照）**。
+Clone this repository and use it. Setting up WSL2 is essential for Windows. Additionally, setting up virtual environments such as Docker or Anaconda on WSL2 is also required. On Mac, setting up Python virtual environments such as Anaconda is necessary. Although preparation is required, this method works the fastest in many environments. **<font color="red"> Even without a GPU, it may work well enough with a reasonably new CPU </font>(refer to the section on real-time performance below)**.
 
-[WSL2 と Docker のインストールの解説動画](https://youtu.be/POo_Cg0eFMU)
+[Explanation video on installing WSL2 and Docker](https://youtu.be/POo_Cg0eFMU)
 
-[WSL2 と Anaconda のインストールの解説動画](https://youtu.be/fba9Zhsukqw)
+[Explanation video on installing WSL2 and Anaconda](https://youtu.be/fba9Zhsukqw)
 
-Docker での実行は、[Docker を使用する](docker_vcclient/README.md)を参考にサーバを起動してください。
+To run docker, see [start docker](docker_vcclient/README_en.md).
 
-Anaconda の仮想環境上での実行は、[サーバ開発者向けのページ](README_dev_ja.md)を参考にサーバを起動してください。
+To run on Anaconda venv, see [server developer's guide](README_dev_en.md)
 
-# トラブルシュート
+# Real-time performance
 
-- [通信編](tutorials/trouble_shoot_communication_ja.md)
-
-# リアルタイム性（MMVC）
-
-GPU を使用するとほとんどタイムラグなく変換可能です。
+Conversion is almost instantaneous when using GPU.
 
 https://twitter.com/DannadoriYellow/status/1613483372579545088?s=20&t=7CLD79h1F3dfKiTb7M8RUQ
 
-CPU でも最近のであればそれなりの速度で変換可能。
+Even with CPU, recent ones can perform conversions at a reasonable speed.
 
 https://twitter.com/DannadoriYellow/status/1613553862773997569?s=20&t=7CLD79h1F3dfKiTb7M8RUQ
 
-古い CPU( i7-4770)だと、1000msec くらいかかってしまう。
+With an old CPU (i7-4770), it takes about 1000 msec for conversion.
 
-# 開発者の署名について
+# Software Signing
 
-本ソフトウェアは開発元の署名しておりません。下記のように警告が出ますが、コントロールキーを押しながらアイコンをクリックすると実行できるようになります。これは Apple のセキュリティポリシーによるものです。実行は自己責任となります。
+This software is not signed by the developer. A warning message will appear, but you can run the software by clicking the icon while holding down the control key. This is due to Apple's security policy. Running the software is at your own risk.
 
 ![image](https://user-images.githubusercontent.com/48346627/212567711-c4a8d599-e24c-4fa3-8145-a5df7211f023.png)
 
+https://user-images.githubusercontent.com/48346627/212569645-e30b7f4e-079d-4504-8cf8-7816c5f40b00.mp4
+
 # Acknowledgments
 
-- [立ちずんだもん素材](https://seiga.nicovideo.jp/seiga/im10792934)
-- [いらすとや](https://www.irasutoya.com/)
-- [つくよみちゃん](https://tyc.rei-yumesaki.net/)
+- [Tachizunda-mon materials](https://seiga.nicovideo.jp/seiga/im10792934)
+- [Irasutoya](https://www.irasutoya.com/)
+- [Tsukuyomi-chan](https://tyc.rei-yumesaki.net)
 
-```
-  本ソフトウェアの音声合成には、フリー素材キャラクター「つくよみちゃん」が無料公開している音声データを使用しています。
-  ■つくよみちゃんコーパス（CV.夢前黎）
-  https://tyc.rei-yumesaki.net/material/corpus/
-  © Rei Yumesaki
-```
+> This software uses the voice data of the free material character "Tsukuyomi-chan," which is provided for free by CV. Yumesaki Rei.
+>
+> - Tsukuyomi-chan Corpus (CV. Yumesaki Rei)
+>
+> https://tyc.rei-yumesaki.net/material/corpus/
+>
+> Copyright. Rei Yumesaki
 
-- [あみたろの声素材工房](https://amitaro.net/)
-- [れぷりかどーる](https://kikyohiroto1227.wixsite.com/kikoto-utau)
+- [Amitaro's Onsozai kobo](https://amitaro.net/)
+- [Replica doll](https://kikyohiroto1227.wixsite.com/kikoto-utau)
 
-# 利用規約
+# Terms of Use
 
-- リアルタイムボイスチェンジャーつくよみちゃんについては、つくよみちゃんコーパスの利用規約に準じ、次の目的で変換後の音声を使用することを禁止します。
+In accordance with the Tsukuyomi-chan Corpus Terms of Use for the Tsukuyomi-chan Real-time Voice Changer, the use of the converted voice for the following purposes is prohibited.
 
-```
+- Criticizing or attacking individuals (the definition of "criticizing or attacking" is based on the Tsukuyomi-chan character license).
 
-■人を批判・攻撃すること。（「批判・攻撃」の定義は、つくよみちゃんキャラクターライセンスに準じます）
+- Advocating for or opposing specific political positions, religions, or ideologies.
 
-■特定の政治的立場・宗教・思想への賛同または反対を呼びかけること。
+- Publicly displaying strongly stimulating expressions without proper zoning.
 
-■刺激の強い表現をゾーニングなしで公開すること。
+- Publicly disclosing secondary use (use as materials) for others.
+  (Distributing or selling as a work for viewing is not a problem.)
 
-■他者に対して二次利用（素材としての利用）を許可する形で公開すること。
-※鑑賞用の作品として配布・販売していただくことは問題ございません。
-```
+Regarding the Real-time Voice Changer Amitaro, we prohibit the following uses in accordance with the terms of use of the Amitaro's koe-sozai kobo.[detail](https://amitaro.net/voice/faq/#index_id6)
 
-- リアルタイムボイスチェンジャーあみたろについては、あみたろの声素材工房様の次の利用規約に準じます。詳細は[こちら](https://amitaro.net/voice/faq/#index_id6)です。
+Regarding the Real-time Voice Changer Kikoto Mahiro, we prohibit the following uses in accordance with the terms of use of Replica doll.[detail](https://kikyohiroto1227.wixsite.com/kikoto-utau/ter%EF%BD%8Ds-of-service)
 
-```
-あみたろの声素材やコーパス読み上げ音声を使って音声モデルを作ったり、ボイスチェンジャーや声質変換などを使用して、自分の声をあみたろの声に変換して使うのもOKです。
+# Disclaimer
 
-ただしその場合は絶対に、あみたろ（もしくは小春音アミ）の声に声質変換していることを明記し、あみたろ（および小春音アミ）が話しているわけではないことが誰でもわかるようにしてください。
-また、あみたろの声で話す内容は声素材の利用規約の範囲内のみとし、センシティブな発言などはしないでください。
-```
-
-- リアルタイムボイスチェンジャー黄琴まひろについては、れぷりかどーるの利用規約に準じます。詳細は[こちら](https://kikyohiroto1227.wixsite.com/kikoto-utau/ter%EF%BD%8Ds-of-service)です。
-
-# 免責事項
-
-本ソフトウェアの使用または使用不能により生じたいかなる直接損害・間接損害・波及的損害・結果的損害 または特別損害についても、一切責任を負いません。
-
-# (1) レコーダー（トレーニング用音声録音アプリ）
-
-MMVC トレーニング用の音声を簡単に録音できるアプリです。
-Github Pages 上で実行できるため、ブラウザのみあれば様々なプラットフォームからご利用可能です。
-録音したデータは、ブラウザ上に保存されます。外部に漏れることはありません。
-
-[録音アプリ on Github Pages](https://w-okada.github.io/voice-changer/)
-
-[解説動画](https://youtu.be/s_GirFEGvaA)
-
-# 過去バージョン
-
-| Version    | OS  | フレームワーク                    | link                                                                                           | サポート VC                                                                   | サイズ |
-| ---------- | --- | --------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------ |
-| v.1.5.2.9e | mac | ONNX(cpu), PyTorch(cpu,mps)       | [normal](https://drive.google.com/uc?id=1W0d7I7619PcO7kjb1SPXp6MmH5Unvd78&export=download) \*1 | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, RVC                              | 796MB  |
-|            | win | ONNX(cpu,cuda), PyTorch(cpu,cuda) | [normal](https://drive.google.com/uc?id=1tmTMJRRggS2Sb4goU-eHlRvUBR88RZDl&export=download) \*1 | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, so-vits-svc 4.0v2, RVC, DDSP-SVC | 2872MB |
-| v.1.5.3.1  | mac | ONNX(cpu), PyTorch(cpu,mps)       | [normal](https://drive.google.com/uc?id=1oswF72q_cQQeXhIn6W275qLnoBAmcrR_&export=download) \*1 | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, RVC                              | 796MB  |
-|            | win | ONNX(cpu,cuda), PyTorch(cpu,cuda) | [normal](https://drive.google.com/uc?id=1AWjDhW4w2Uljp1-9P8YUJBZsIlnhkJX2&export=download) \*1 | MMVC v.1.5.x, MMVC v.1.3.x, so-vits-svc 4.0, so-vits-svc 4.0v2, RVC, DDSP-SVC | 2872MB |
-
-# For Contributor
-
-このリポジトリは[CLA](https://raw.githubusercontent.com/w-okada/voice-changer/master/LICENSE-CLA)を設定しています。
+We are not liable for any direct, indirect, consequential, incidental, or special damages arising out of or in any way connected with the use or inability to use this software.
