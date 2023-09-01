@@ -17,6 +17,7 @@ Copy the link for the newest conda (e.g. the one called "Anaconda3-2023.07-2-Lin
 - Create a conda environment, install this repo's requirements
 
 This repo requires torchaudio. Intel do not officially provide torchaudio wheels. You may get my compiled wheels from mega.nz, via megatools in the command line.
+From inside this repo's folder,
 
 ```sh
 conda create -n rvc python=3.10
@@ -33,6 +34,9 @@ python -m pip install --no-deps torchaudio-2.0.2+31de77d-cp310-cp310-linux_x86_6
 intel_extension_for_pytorch-2.0.110+gite29c5fb-cp310-cp310-linux_x86_64.whl
 cd ..
 rm -rf ./megatemp
+cd ./server
+pip install -r requirements.txt
+cd ..
 ```
 
 If you do not wish to get my wheels, you can compile them yourself with Intel's convenient compile script: https://github.com/intel/intel-extension-for-pytorch/blob/xpu-master/scripts/compile_bundle.sh
