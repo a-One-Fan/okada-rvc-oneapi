@@ -18,6 +18,7 @@ from voice_changer.utils.VoiceChangerModel import AudioInOut
 from voice_changer.utils.VoiceChangerParams import VoiceChangerParams
 from dataclasses import dataclass, asdict, field
 import torch
+import intel_extension_for_pytorch
 
 # import threading
 from typing import Callable
@@ -116,11 +117,11 @@ class VoiceChangerManager(ServerDeviceCallbacks):
             json.dump(self.stored_setting, open(STORED_SETTING_FILE, "w"))
 
     def _get_gpuInfos(self):
-        devCount = torch.cuda.device_count()
+        devCount = torch.xpu.device_count()
         gpus = []
         for id in range(devCount):
-            name = torch.cuda.get_device_name(id)
-            memory = torch.cuda.get_device_properties(id).total_memory
+            name = torch.xpu.get_device_name(id)
+            memory = torch.xpu.get_device_properties(id).total_memory
             gpu = {"id": id, "name": name, "memory": memory}
             gpus.append(gpu)
         return gpus

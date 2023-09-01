@@ -37,6 +37,8 @@ from Exceptions import (
 )
 from voice_changer.utils.VoiceChangerParams import VoiceChangerParams
 
+import intel_extension_for_pytorch
+
 STREAM_INPUT_FILE = os.path.join(TMP_DIR, "in.wav")
 STREAM_OUTPUT_FILE = os.path.join(TMP_DIR, "out.wav")
 logger = VoiceChangaerLogger.get_instance().getLogger()
@@ -87,13 +89,13 @@ class VoiceChangerV2(VoiceChangerIF):
 
         self.voiceChanger: VoiceChangerModel | None = None
         self.params = params
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = torch.xpu.device_count()
         self.prev_audio = np.zeros(4096)
         self.mps_enabled: bool = getattr(torch.backends, "mps", None) is not None and torch.backends.mps.is_available()
         self.onnx_device = onnxruntime.get_device()
         self.noCrossFade = False
 
-        logger.info(f"VoiceChangerV2 Initialized (GPU_NUM(cuda):{self.gpu_num}, mps_enabled:{self.mps_enabled}, onnx_device:{self.onnx_device})")
+        logger.info(f"VoiceChangerV2 Initialized (GPU_NUM(xpu):{self.gpu_num}, mps_enabled:{self.mps_enabled}, onnx_device:{self.onnx_device})")
 
     def setModel(self, model: VoiceChangerModel):
         self.voiceChanger = model
