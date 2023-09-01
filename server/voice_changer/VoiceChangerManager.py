@@ -18,7 +18,8 @@ from voice_changer.utils.VoiceChangerModel import AudioInOut
 from voice_changer.utils.VoiceChangerParams import VoiceChangerParams
 from dataclasses import dataclass, asdict, field
 import torch
-import intel_extension_for_pytorch
+
+from voice_changer.utils.Device import get_devices
 
 # import threading
 from typing import Callable
@@ -80,7 +81,7 @@ class VoiceChangerManager(ServerDeviceCallbacks):
 
         self.modelSlotManager = ModelSlotManager.get_instance(self.params.model_dir)
         # スタティックな情報を収集
-        self.gpus: list[GPUInfo] = self._get_gpuInfos()
+        self.gpus: list[GPUInfo] = get_devices()
 
         self.serverDevice = ServerDevice(self)
 
@@ -115,16 +116,6 @@ class VoiceChangerManager(ServerDeviceCallbacks):
         if key in saveItem:
             self.stored_setting[key] = val
             json.dump(self.stored_setting, open(STORED_SETTING_FILE, "w"))
-
-    def _get_gpuInfos(self):
-        devCount = torch.xpu.device_count()
-        gpus = []
-        for id in range(devCount):
-            name = torch.xpu.get_device_name(id)
-            memory = torch.xpu.get_device_properties(id).total_memory
-            gpu = {"id": id, "name": name, "memory": memory}
-            gpus.append(gpu)
-        return gpus
 
     @classmethod
     def get_instance(cls, params: VoiceChangerParams):
