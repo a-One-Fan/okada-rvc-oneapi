@@ -58,7 +58,8 @@ From within this repository's directory,
 ```sh
 conda activate rvc
 oneapi
-python3 ./server/MMVCServerSIO.py -p 18888 --https true \
+cd ./server
+python3 MMVCServerSIO.py -p 18888 --https true \
     --content_vec_500 pretrain/checkpoint_best_legacy_500.pt  \
     --content_vec_500_onnx pretrain/content_vec_500.onnx \
     --content_vec_500_onnx_on true \
