@@ -2,6 +2,7 @@ tmp
 dummy
 node_modules
 __pycache__
+rvcvenv
 
 server/upload_dir/
 server/MMVC_Client_v13/
