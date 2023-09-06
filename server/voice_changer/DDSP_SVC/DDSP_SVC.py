@@ -28,6 +28,7 @@ from voice_changer.RVC.embedder.EmbedderManager import EmbedderManager
 # from Exceptions import NoModeLoadedException
 from voice_changer.DDSP_SVC.SvcDDSP import SvcDDSP
 
+from voice_changer.utils.Device import get_per_api_device_count
 
 def phase_vocoder(a, b, fade_out, fade_in):
     fa = torch.fft.rfft(a)
@@ -54,7 +55,7 @@ class DDSP_SVC:
     def __init__(self, params: VoiceChangerParams, slotInfo: DDSPSVCModelSlot):
         print("[Voice Changer] [DDSP-SVC] Creating instance ")
         self.deviceManager = DeviceManager.get_instance()
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = get_per_api_device_count()
         self.params = params
         self.settings = DDSP_SVCSettings()
         self.svc_model: SvcDDSP = SvcDDSP()

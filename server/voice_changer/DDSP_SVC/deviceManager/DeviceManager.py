@@ -1,5 +1,6 @@
 import torch
 
+from voice_changer.utils.Device import get_a_device, get_per_api_device_count, get_per_api_device_properties, get_per_api_device_name
 
 class DeviceManager(object):
     _instance = None
@@ -11,7 +12,7 @@ class DeviceManager(object):
         return cls._instance
 
     def __init__(self):
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = get_per_api_device_count()
         self.mps_enabled: bool = (
             getattr(torch.backends, "mps", None) is not None
             and torch.backends.mps.is_available()
@@ -24,7 +25,7 @@ class DeviceManager(object):
             else:
                 dev = torch.device("mps")
         else:
-            dev = torch.device("cuda", index=id)
+            dev = torch.device(get_a_device(), index=id)
         return dev
 
     def halfPrecisionAvailable(self, id: int):
@@ -34,7 +35,7 @@ class DeviceManager(object):
             return False
 
         try:
-            gpuName = torch.cuda.get_device_name(id).upper()
+            gpuName = get_per_api_device_name(id).upper()
             if (
                 ("16" in gpuName and "V100" not in gpuName)
                 or "P40" in gpuName.upper()
@@ -50,7 +51,7 @@ class DeviceManager(object):
 
     def getDeviceMemory(self, id: int):
         try:
-            return torch.cuda.get_device_properties(id).total_memory
+            return get_per_api_device_properties(id).total_memory
             # except Exception as e:
         except:  # NOQA
             # print(e)

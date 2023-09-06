@@ -368,12 +368,20 @@ class SineGen(torch.nn.Module):
             rad_values[:, 0, :] = rad_values[:, 0, :] + rand_ini
             tmp_over_one = torch.cumsum(rad_values, 1)  # % 1  #####%1意味着后面的cumsum无法再优化
             tmp_over_one *= upp
-            tmp_over_one = F.interpolate(
-                tmp_over_one.transpose(2, 1),
-                scale_factor=upp,
-                mode="linear",
-                align_corners=True,
-            ).transpose(2, 1)
+            if tmp_over_one.device.type == 'xpu': # align_corners is unsupported by oneDNN
+                tmp_over_one = F.interpolate(
+                    tmp_over_one.transpose(2, 1).to('cpu'), 
+                    scale_factor=upp,
+                    mode="linear",
+                    align_corners=True,
+                ).to(tmp_over_one.device).transpose(2, 1)
+            else:
+                tmp_over_one = F.interpolate(
+                    tmp_over_one.transpose(2, 1), 
+                    scale_factor=upp,
+                    mode="linear",
+                    align_corners=True,
+                ).transpose(2, 1)
             rad_values = F.interpolate(rad_values.transpose(2, 1), scale_factor=upp, mode="nearest").transpose(2, 1)
             tmp_over_one %= 1
             tmp_over_one_idx = (tmp_over_one[:, 1:, :] - tmp_over_one[:, :-1, :]) < 0

@@ -7,7 +7,6 @@ from einops import rearrange, repeat
 
 from local_attention import LocalAttention
 import torch.nn.functional as F
-#import fast_transformers.causal_product.causal_product_cuda
 
 def softmax_kernel(data, *, projection_matrix, is_query, normalize_data=True, eps=1e-4, device = None):
     b, h, *_ = data.shape

@@ -8,6 +8,7 @@ from mods.log_control import VoiceChangaerLogger
 
 logger = VoiceChangaerLogger.get_instance().getLogger()
 
+from voice_changer.utils.Device import get_a_device
 
 class BiGRU(nn.Module):
     def __init__(self, input_features, hidden_features, num_layers):
@@ -345,7 +346,7 @@ class RMVPE:
         self.resample_kernel = {}
         self.is_half = is_half
         if device is None:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
+            device = get_a_device()
         self.device = device
         self.mel_extractor = MelSpectrogram(
             is_half, 128, 16000, 1024, 160, None, 30, 8000
@@ -372,21 +373,12 @@ class RMVPE:
 
     def infer_from_audio(self, audio, thred=0.03):
         audio = torch.from_numpy(audio).float().to(self.device).unsqueeze(0)
-        # torch.cuda.synchronize()
-        # t0=ttime()
         mel = self.mel_extractor(audio, center=True)
-        # torch.cuda.synchronize()
-        # t1=ttime()
         hidden = self.mel2hidden(mel)
-        # torch.cuda.synchronize()
-        # t2=ttime()
         hidden = hidden.squeeze(0).cpu().numpy()
         if self.is_half is True:
             hidden = hidden.astype("float32")
         f0 = self.decode(hidden, thred=thred)
-        # torch.cuda.synchronize()
-        # t3=ttime()
-        # print("hmvpe:%s\t%s\t%s\t%s"%(t1-t0,t2-t1,t3-t2,t3-t0))
         return f0
 
     def infer_from_audio_t(self, audio, thred=0.03):

@@ -1,7 +1,6 @@
 from typing import Any
 import torch
 import torch.nn.functional as F
-from torch.cuda.amp import autocast
 from Exceptions import (
     DeviceCannotSupportHalfPrecisionException,
     DeviceChangingException,
@@ -21,6 +20,7 @@ from voice_changer.utils.Timer import Timer
 
 logger = VoiceChangaerLogger.get_instance().getLogger()
 
+from voice_changer.utils.Device import get_a_device
 
 class Pipeline(object):
     embedder: Embedder
@@ -144,7 +144,7 @@ class Pipeline(object):
         with Timer("pre-process", False) as t:
 
             # embedding
-            with autocast(enabled=self.isHalf):
+            with torch.autocast(get_a_device(), type=torch.float16, enabled=self.isHalf):
                 try:
                     feats = self.embedder.extractFeatures(feats, embOutputLayer, useFinalProj)
                     if torch.isnan(feats).all():
@@ -163,7 +163,7 @@ class Pipeline(object):
             # 推論実行
             try:
                 with torch.no_grad():
-                    with autocast(enabled=self.isHalf):
+                    with torch.autocast(get_a_device(), type=torch.float16, enabled=self.isHalf):
                         audio1 = (
                             torch.clip(
                                 self.inferencer.infer(

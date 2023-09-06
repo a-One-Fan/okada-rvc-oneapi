@@ -3,7 +3,6 @@ from typing import Any
 import math
 import torch
 import torch.nn.functional as F
-from torch.cuda.amp import autocast
 from Exceptions import (
     DeviceCannotSupportHalfPrecisionException,
     DeviceChangingException,
@@ -22,6 +21,8 @@ from voice_changer.utils.Timer import Timer2
 
 logger = VoiceChangaerLogger.get_instance().getLogger()
 
+import voice_changer.utils.Device
+from voice_changer.utils.Device import get_a_device
 
 class Pipeline(object):
     embedder: Embedder
@@ -100,7 +101,7 @@ class Pipeline(object):
         return pitch, pitchf
 
     def extractFeatures(self, feats, embOutputLayer, useFinalProj):
-        with autocast(enabled=self.isHalf):
+        with torch.autocast(get_a_device(), dtype=torch.float16, enabled=self.isHalf):
             try:
                 feats = self.embedder.extractFeatures(feats, embOutputLayer, useFinalProj)
                 if torch.isnan(feats).all():
@@ -117,7 +118,7 @@ class Pipeline(object):
     def infer(self, feats, p_len, pitch, pitchf, sid, out_size):
         try:
             with torch.no_grad():
-                with autocast(enabled=self.isHalf):
+                with torch.autocast(get_a_device(), dtype=torch.float16, enabled=self.isHalf):
                     audio1 = (
                         torch.clip(
                             self.inferencer.infer(feats, p_len, pitch, pitchf, sid, out_size)[0][0, 0].to(dtype=torch.float32),
@@ -267,7 +268,6 @@ class Pipeline(object):
                 pitchf_buffer = None
 
             del p_len, pitch, pitchf, feats
-            # torch.cuda.empty_cache()
 
             # inferで出力されるサンプリングレートはモデルのサンプリングレートになる。
             # pipelineに（入力されるときはhubertように16k）
@@ -278,7 +278,6 @@ class Pipeline(object):
 
             del sid
             t.record("post-process")
-            # torch.cuda.empty_cache()
         # print("EXEC AVERAGE:", t.avrSecs)
         return audio1, pitchf_buffer, feats_buffer
 

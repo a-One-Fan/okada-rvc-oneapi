@@ -34,6 +34,7 @@ import librosa
 
 from Exceptions import NoModeLoadedException
 
+from voice_changer.utils.Device import get_a_device, get_per_api_device_count
 
 providers = [
     "OpenVINOExecutionProvider",
@@ -85,7 +86,7 @@ class SoVitsSvc40:
         except Exception as e:
             print("EXCEPTION during loading hubert/contentvec model", e)
 
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = get_per_api_device_count()
         self.audio_buffer: AudioInOut | None = None
         self.prevVol = 0
         self.slotInfo = slotInfo
@@ -211,7 +212,7 @@ class SoVitsSvc40:
         if (self.settings.gpu < 0 or self.gpu_num == 0) or self.slotInfo.isONNX:
             dev = torch.device("cpu")
         else:
-            dev = torch.device("cuda", index=self.settings.gpu)
+            dev = torch.device(get_a_device(), index=self.settings.gpu)
 
         if hasattr(self, "content_vec_onnx"):
             c = self.content_vec_onnx.run(
@@ -321,7 +322,7 @@ class SoVitsSvc40:
         if self.settings.gpu < 0 or self.gpu_num == 0:
             dev = torch.device("cpu")
         else:
-            dev = torch.device("cuda", index=self.settings.gpu)
+            dev = torch.device(get_a_device(), index=self.settings.gpu)
 
         convertSize = data[3]
         vol = data[4]

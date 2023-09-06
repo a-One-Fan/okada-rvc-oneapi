@@ -31,6 +31,8 @@ from voice_changer.MMVCv15.client_modules import (
 
 from Exceptions import NoModeLoadedException, ONNXInputArgumentException
 
+from voice_changer.utils.Device import get_per_api_device_count, get_a_device
+
 providers = [
     "OpenVINOExecutionProvider",
     "CUDAExecutionProvider",
@@ -63,7 +65,7 @@ class MMVCv15:
         self.net_g = None
         self.onnx_session: onnxruntime.InferenceSession | None = None
 
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = get_per_api_device_count()
 
         self.slotInfo = slotInfo
         self.audio_buffer: AudioInOut | None = None
@@ -125,6 +127,7 @@ class MMVCv15:
     def getOnnxExecutionProvider(self):
         availableProviders = onnxruntime.get_available_providers()
         devNum = torch.cuda.device_count()
+        print("\n\nCUDA ONNX execution provider? 2\n\n")
         if self.settings.gpu >= 0 and "CUDAExecutionProvider" in availableProviders and devNum > 0:
             return ["CUDAExecutionProvider"], [{"device_id": self.settings.gpu}]
         elif self.settings.gpu >= 0 and "DmlExecutionProvider" in availableProviders:
@@ -277,7 +280,7 @@ class MMVCv15:
         if self.settings.gpu < 0 or self.gpu_num == 0:
             dev = torch.device("cpu")
         else:
-            dev = torch.device("cuda", index=self.settings.gpu)
+            dev = torch.device(get_a_device(), index=self.settings.gpu)
 
         with torch.no_grad():
             spec, f0, sid_src = data

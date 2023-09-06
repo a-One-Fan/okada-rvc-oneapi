@@ -37,7 +37,7 @@ from Exceptions import (
 )
 from voice_changer.utils.VoiceChangerParams import VoiceChangerParams
 
-from voice_changer.utils.Device import get_device_count
+from voice_changer.utils.Device import get_device_count, get_a_device
 
 STREAM_INPUT_FILE = os.path.join(TMP_DIR, "in.wav")
 STREAM_OUTPUT_FILE = os.path.join(TMP_DIR, "out.wav")
@@ -95,7 +95,7 @@ class VoiceChangerV2(VoiceChangerIF):
         self.onnx_device = onnxruntime.get_device()
         self.noCrossFade = False
 
-        logger.info(f"VoiceChangerV2 Initialized (GPU_NUM(xpu):{self.gpu_num}, mps_enabled:{self.mps_enabled}, onnx_device:{self.onnx_device})")
+        logger.info(f"VoiceChangerV2 Initialized (GPU_NUM({get_a_device()}):{self.gpu_num}, mps_enabled:{self.mps_enabled}, onnx_device:{self.onnx_device})")
 
     def setModel(self, model: VoiceChangerModel):
         self.voiceChanger = model

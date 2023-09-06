@@ -7,6 +7,7 @@ import torch
 import torch.nn.functional as F
 CREPE_RESAMPLE_KERNEL = {}
 
+from voice_changer.utils.Device import get_a_device
 
 def median_pool_1d(x, kernel_size):
     x = x.unsqueeze(1)
@@ -128,7 +129,7 @@ class F0_Extractor:
         # extract f0 using crepe
         elif self.f0_extractor == 'crepe':
             if device is None:
-                device = 'cuda' if torch.cuda.is_available() else 'cpu'
+                device = get_a_device()
             resample_kernel = self.resample_kernel.to(device)
             wav16k_torch = resample_kernel(torch.FloatTensor(audio).unsqueeze(0).to(device))
 

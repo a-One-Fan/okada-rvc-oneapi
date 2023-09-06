@@ -26,6 +26,7 @@ from voice_changer.RVC.onnxExporter.SynthesizerTrnMsNSFsid_webui_ONNX import (
 )
 from voice_changer.VoiceChangerParamsManager import VoiceChangerParamsManager
 
+from voice_changer.utils.Device import get_a_device
 
 def export2onnx(gpu: int, modelSlot: RVCModelSlot):
     vcparams = VoiceChangerParamsManager.get_instance().params
@@ -60,7 +61,7 @@ def export2onnx(gpu: int, modelSlot: RVCModelSlot):
 def _export2onnx(input_model, output_model, output_model_simple, is_half, metadata):
     cpt = torch.load(input_model, map_location="cpu")
     if is_half:
-        dev = torch.device("cuda", index=0)
+        dev = torch.device(get_a_device(), index=0)
     else:
         dev = torch.device("cpu")
 

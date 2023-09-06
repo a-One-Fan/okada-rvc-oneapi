@@ -8,6 +8,7 @@
 import torch
 from torch.nn import ConstantPad1d as pad1d
 
+from voice_changer.utils.Device import is_there_any_accel, get_a_device
 
 def pd_indexing(x, d, dilation, batch_index, ch_index):
     """Pitch-dependent indexing of past and future samples.
@@ -76,7 +77,7 @@ def index_initial(n_batch, n_ch, tensor=True):
     if tensor:
         batch_index = torch.tensor(batch_index)
         ch_index = torch.tensor(ch_index)
-        if torch.cuda.is_available():
-            batch_index = batch_index.cuda()
-            ch_index = ch_index.cuda()
+        if is_there_any_accel():
+            batch_index = batch_index.to(get_a_device())
+            ch_index = ch_index.to(get_a_device())
     return batch_index, ch_index

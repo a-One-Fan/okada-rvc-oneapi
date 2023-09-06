@@ -16,6 +16,7 @@ from ..encoder.hubert.model import HubertSoft
 
 CREPE_RESAMPLE_KERNEL = {}
 
+from voice_changer.utils.Device import get_a_device
 
 class F0_Extractor:
     def __init__(self, f0_extractor, sample_rate=44100, hop_size=512, f0_min=65, f0_max=800):
@@ -58,7 +59,7 @@ class F0_Extractor:
         # extract f0 using crepe
         elif self.f0_extractor == "crepe":
             if device is None:
-                device = "cuda" if torch.cuda.is_available() else "cpu"
+                device = get_a_device()
             resample_kernel = self.resample_kernel.to(device)
             wav16k_torch = resample_kernel(torch.FloatTensor(audio).unsqueeze(0).to(device))
 
@@ -99,7 +100,7 @@ class Volume_Extractor:
 class Units_Encoder:
     def __init__(self, encoder, encoder_ckpt, encoder_sample_rate=16000, encoder_hop_size=320, device=None, cnhubertsoft_gate=10):
         if device is None:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
+            device = get_a_device()
         self.device = device
 
         is_loaded_encoder = False

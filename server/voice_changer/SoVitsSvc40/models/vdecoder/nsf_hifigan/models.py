@@ -11,8 +11,9 @@ from .utils import init_weights, get_padding
 
 LRELU_SLOPE = 0.1
 
+from voice_changer.utils.Device import get_a_device
 
-def load_model(model_path, device="cuda"):
+def load_model(model_path, device=get_a_device()):
     config_file = os.path.join(os.path.split(model_path)[0], "config.json")
     with open(config_file) as f:
         data = f.read()

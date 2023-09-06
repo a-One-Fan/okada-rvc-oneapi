@@ -2,9 +2,11 @@ from dataclasses import dataclass
 
 import torch
 import platform
+import os
 
 has_cuda = False
 has_ipex = False
+is_wsl = 'wsl' in os.popen("uname -r").read().lower()
 
 try:
     import intel_extension_for_pytorch as ipex
@@ -57,6 +59,27 @@ def get_devices():
 
     return devices
 
+def get_per_api_devices():
+    devices: list[DeviceInfo] = []
+
+    if has_cuda:
+        for i in range(torch.cuda.device_count()):
+            dev = torch.device('cuda', i)
+            name = torch.cuda.get_device_name(dev)
+            memory = torch.cuda.get_device_properties(dev).total_memory
+            devices.append({"id": i, "name": name, "memory": memory})
+        return devices
+    
+    if has_ipex:
+        for i in range(torch.xpu.device_count()):
+            dev = torch.device('xpu', i)
+            name = torch.xpu.get_device_name(dev)
+            memory = torch.xpu.get_device_properties(dev).total_memory
+            devices.append({"id": i, "name": name, "memory": memory})
+        return devices
+
+    return devices
+
 def get_device_count():
     count = 0
 
@@ -66,3 +89,48 @@ def get_device_count():
         count += torch.cuda.device_count()
 
     return count
+
+def get_per_api_device_count():
+    if has_cuda:
+        return torch.cuda.device_count()
+    
+    if has_ipex:
+        return torch.xpu.device_count()
+    
+    return 0
+
+def get_a_device():
+    if has_cuda:
+        return 'cuda'
+    if has_ipex:
+        return 'xpu'
+    
+    return 'cpu'
+
+def is_there_any_accel():
+    return has_ipex or has_cuda
+
+def devices_empty_cache():
+    if has_cuda:
+        torch.cuda.empty_cache()
+
+    if has_ipex and not is_wsl: # Causes memory leak in WSL
+        torch.xpu.empty_cache()
+
+def get_per_api_device_name(id):
+    if has_cuda:
+        return torch.cuda.get_device_name(id)
+    
+    if has_ipex:
+        return torch.xpu.get_device_name(id)
+    
+    return "DEVICE_NAME_ERROR"
+
+def get_per_api_device_properties(id):
+    if has_cuda:
+        return torch.cuda.get_device_properties(id)
+    
+    if has_ipex:
+        return torch.xpu.get_device_properties(id)
+    
+    return ""

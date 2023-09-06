@@ -335,7 +335,6 @@ class SynthesizerTrn(nn.Module):
         # # VC
         # tgt_z = self.flow(z_p, y_mask, g=tgt_g, reverse=True)
         # # アライメントの作成
-        # liner_alignment = F.one_hot(torch.arange(0, x.shape[2] + 2)).cuda()
         # liner_alignment = torch.stack([liner_alignment for _ in range(x.shape[0])], axis=0)
         # liner_alignment = F.interpolate(liner_alignment.float(), size=(z.shape[2]), mode="linear", align_corners=True)
         # liner_alignment = liner_alignment[:, 1:-1, :]

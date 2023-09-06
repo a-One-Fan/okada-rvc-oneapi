@@ -1,6 +1,7 @@
 import torch
 import onnxruntime
 
+from voice_changer.utils.Device import get_per_api_device_count, get_a_device, get_per_api_device_properties, get_per_api_device_name
 
 class DeviceManager(object):
     _instance = None
@@ -13,7 +14,7 @@ class DeviceManager(object):
         return cls._instance
 
     def __init__(self):
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = get_per_api_device_count()
         self.mps_enabled: bool = (
             getattr(torch.backends, "mps", None) is not None
             and torch.backends.mps.is_available()
@@ -27,7 +28,7 @@ class DeviceManager(object):
                 dev = torch.device("mps")
         else:
             if id < self.gpu_num:
-                dev = torch.device("cuda", index=id)
+                dev = torch.device(get_a_device(), index=id)
             else:
                 print("[Voice Changer] device detection error, fallback to cpu")
                 dev = torch.device("cpu")
@@ -35,7 +36,8 @@ class DeviceManager(object):
 
     def getOnnxExecutionProvider(self, gpu: int):
         availableProviders = onnxruntime.get_available_providers()
-        devNum = torch.cuda.device_count()
+        devNum = get_per_api_device_count()
+        print("\n\nCUDA ONNX execution provider? 3\n\n")
         if gpu >= 0 and "CUDAExecutionProvider" in availableProviders and devNum > 0:
             if gpu < devNum:  # ひとつ前のif文で弾いてもよいが、エラーの解像度を上げるため一段下げ。
                 return ["CUDAExecutionProvider"], [{"device_id": gpu}]
@@ -71,7 +73,7 @@ class DeviceManager(object):
             return False
 
         try:
-            gpuName = torch.cuda.get_device_name(id).upper()
+            gpuName = get_per_api_device_name(id).upper()
             if (
                 ("16" in gpuName and "V100" not in gpuName)
                 or "P40" in gpuName.upper()
@@ -83,15 +85,11 @@ class DeviceManager(object):
             print(e)
             return False
 
-        cap = torch.cuda.get_device_capability(id)
-        if cap[0] < 7:  # コンピューティング機能が7以上の場合half precisionが使えるとされている（が例外がある？T500とか）
-            return False
-
         return True
 
     def getDeviceMemory(self, id: int):
         try:
-            return torch.cuda.get_device_properties(id).total_memory
+            return get_per_api_device_properties(id).total_memory
         except Exception as e:
             # except:
             print(e)

@@ -7,11 +7,12 @@ from ..vdecoder.nsf_hifigan.nvSTFT import STFT
 from ..vdecoder.nsf_hifigan.models import load_model
 from torchaudio.transforms import Resample
 
+from voice_changer.utils.Device import get_a_device
 
 class Enhancer:
     def __init__(self, enhancer_type, enhancer_ckpt, device=None):
         if device is None:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
+            device = get_a_device()
         self.device = device
 
         if enhancer_type == "nsf-hifigan":
@@ -75,7 +76,7 @@ class NsfHifiGAN(torch.nn.Module):
     def __init__(self, model_path, device=None):
         super().__init__()
         if device is None:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
+            device = "xpu" if torch.xpu.is_available() else "cpu"
         self.device = device
         print("| Load HifiGAN: ", model_path)
         self.model, self.h = load_model(model_path, device=self.device)

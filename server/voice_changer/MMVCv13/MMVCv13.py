@@ -35,6 +35,7 @@ from voice_changer.MMVCv13.TrainerFunctions import (
 
 from Exceptions import NoModeLoadedException
 
+from voice_changer.utils.Device import get_per_api_device_count, get_a_device
 
 @dataclass
 class MMVCv13Settings:
@@ -55,7 +56,7 @@ class MMVCv13:
         self.net_g = None
         self.onnx_session = None
 
-        self.gpu_num = torch.cuda.device_count()
+        self.gpu_num = get_per_api_device_count()
         self.text_norm = torch.LongTensor([0, 6, 0])
 
         self.audio_buffer: AudioInOut | None = None
@@ -88,7 +89,8 @@ class MMVCv13:
 
     def getOnnxExecutionProvider(self):
         availableProviders = onnxruntime.get_available_providers()
-        devNum = torch.cuda.device_count()
+        devNum = get_per_api_device_count()
+        print("\n\Need OpenVINO ONNX execution provider?\n\n")
         if self.settings.gpu >= 0 and "CUDAExecutionProvider" in availableProviders and devNum > 0:
             return ["CUDAExecutionProvider"], [{"device_id": self.settings.gpu}]
         elif self.settings.gpu >= 0 and "DmlExecutionProvider" in availableProviders:
@@ -116,14 +118,6 @@ class MMVCv13:
                     providers=providers,
                     provider_options=options,
                 )
-                # providers = self.onnx_session.get_providers()
-                # print("Providers:", providers)
-                # if "CUDAExecutionProvider" in providers:
-                #     provider_options = [{"device_id": self.settings.gpu}]
-                #     self.onnx_session.set_providers(
-                #         providers=["CUDAExecutionProvider"],
-                #         provider_options=provider_options,
-                #     )
         elif key in self.settings.floatData:
             setattr(self.settings, key, float(val))
         elif key in self.settings.strData:
@@ -222,7 +216,7 @@ class MMVCv13:
         if self.settings.gpu < 0 or self.gpu_num == 0:
             dev = torch.device("cpu")
         else:
-            dev = torch.device("cuda", index=self.settings.gpu)
+            dev = torch.device(get_a_device(), index=self.settings.gpu)
 
         with torch.no_grad():
             x, x_lengths, spec, spec_lengths, y, y_lengths, sid_src = [x.to(dev) for x in data]

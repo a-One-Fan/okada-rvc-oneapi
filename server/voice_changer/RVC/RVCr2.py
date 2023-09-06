@@ -23,6 +23,7 @@ from typing import cast
 
 logger = VoiceChangaerLogger.get_instance().getLogger()
 
+from voice_changer.utils.Device import devices_empty_cache
 
 class RVCr2(VoiceChangerModel):
     def __init__(self, params: VoiceChangerParams, slotInfo: RVCModelSlot):
@@ -261,7 +262,7 @@ class RVCr2(VoiceChangerModel):
             del self.pipeline
             self.pipeline = None
 
-        torch.cuda.empty_cache()
+        devices_empty_cache()
         self.initialize()
 
         output_file_simple = export2onnx(self.settings.gpu, modelSlot)

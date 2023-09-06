@@ -11,6 +11,8 @@ from torch import nn
 from torch.nn import functional as F
 import scipy
 
+from voice_changer.utils.Device import get_a_device
+
 # from:https://github.com/fishaudio/fish-diffusion
 
 
@@ -261,7 +263,7 @@ class CrepePitchExtractor(BasePitchExtractor):
         self.use_fast_filters = use_fast_filters
         self.hop_length = hop_length
         if device is None:
-            self.dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.dev = torch.device(get_a_device())
         else:
             self.dev = torch.device(device)
         if self.use_fast_filters:

@@ -7,6 +7,7 @@ from const import TMP_DIR, EnumInferenceTypes
 from data.ModelSlot import DiffusionSVCModelSlot
 from voice_changer.RVC.deviceManager.DeviceManager import DeviceManager
 
+from voice_changer.utils.Device import get_a_device
 
 def export2onnx(gpu: int, modelSlot: DiffusionSVCModelSlot):
     modelFile = modelSlot.modelFile
@@ -38,7 +39,7 @@ def export2onnx(gpu: int, modelSlot: DiffusionSVCModelSlot):
 def _export2onnx(input_model, output_model, output_model_simple, is_half, metadata):
     cpt = torch.load(input_model, map_location="cpu")
     if is_half:
-        dev = torch.device("cuda", index=0)
+        dev = torch.device(get_a_device(), index=0)
     else:
         dev = torch.device("cpu")
 

@@ -11,8 +11,9 @@ from .utils import init_weights, get_padding
 
 LRELU_SLOPE = 0.1
 
+from voice_changer.utils.Device import get_a_device
 
-def load_model(model_path, device='cuda'):
+def load_model(model_path, device=get_a_device()):
     h = load_config(model_path)
 
     generator = Generator(h).to(device)

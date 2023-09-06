@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 from .unit2mel import load_model_vocoder
 
+from voice_changer.utils.Device import get_a_device
 
 class DiffGtMel:
     def __init__(self, project_path=None, device=None):
@@ -9,7 +10,7 @@ class DiffGtMel:
         if device is not None:
             self.device = device
         else:
-            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+            self.device = get_a_device()
         self.model = None
         self.vocoder = None
         self.args = None

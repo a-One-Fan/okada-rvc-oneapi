@@ -10,13 +10,14 @@ from voice_changer.DiffusionSVC.inferencer.diffusion_svc_model.tools.slicer impo
 from voice_changer.DiffusionSVC.inferencer.diffusion_svc_model.tools.units_index import UnitsIndexer
 from voice_changer.DiffusionSVC.inferencer.diffusion_svc_model.tools.tools import F0_Extractor, Volume_Extractor, Units_Encoder, SpeakerEncoder, cross_fade
 
+from voice_changer.utils.Device import get_a_device
 
 class DiffusionSVC:
     def __init__(self, device=None):
         if device is not None:
             self.device = device
         else:
-            self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+            self.device = get_a_device()
         self.model_path = None
         self.model = None
         self.vocoder = None
