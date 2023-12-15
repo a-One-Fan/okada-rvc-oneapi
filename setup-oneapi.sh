@@ -1,22 +1,3 @@
-if [[ ! -e /opt/intel/oneapi/setvars.sh ]]; then
-    echo "Please install the oneAPI base toolkit. "
-    echo "https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html?operatingsystem=linux&distributions=aptpackagemanager"
-    exit 1
-fi
-
-echo "This script will install, if not already installed, Python 3.10, libportaudio2, libasound-dev, intel-oneapi-dpcpp-cpp-2024.0 and intel-oneapi-mkl-devel=2024.0.0-49656"
-read -p "Continue? Y/n:" yn
-if [[ $yn == [nN] ]]; then
-    exit 0
-fi
-
-python3.10 --version
-if [[ $? != 0 ]]; then
-    sudo apt install python3.10
-fi
-
-sudo apt install libportaudio2 libasound-dev intel-oneapi-dpcpp-cpp-2024.0 intel-oneapi-mkl-devel=2024.0.0-49656
-
 python3.10 -m venv rvcvenv
 source ./rvcvenv/bin/activate
 pip install --upgrade pip
