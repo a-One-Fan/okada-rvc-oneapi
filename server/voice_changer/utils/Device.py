@@ -12,15 +12,16 @@ try:
     import intel_extension_for_pytorch as ipex
     if torch.xpu.device_count() > 0:
         has_ipex = True
-        print(f"IPEX loaded, {torch.xpu.device_count()} XPU devices present")
+        print(f"\n\x1b[0;32;40mIPEX loaded, {torch.xpu.device_count()} XPU devices present\x1b[0m")
 
         # Intel do not report the full, correct VRAM amount. The actual amount varies - ~80% for WIndows/WSL, 95% for Linux?
         # The following magic code remedies that.
         import os
         os.environ.setdefault('NEOReadDebugKeys', '1')
         os.environ.setdefault('ClDeviceGlobalMemSizeAvailablePercent', '100')
-except:
-    print("No IPEX, or XPU devices found.")
+except Exception as e:
+    print("\x1b[0;31;40mIpex not loaded:\x1b[0m")
+    print(e)
 
 try:
     if torch.cuda.device_count() > 0:
