@@ -3,6 +3,7 @@ dummy
 node_modules
 __pycache__
 rvcvenv
+conda_rvcenv
 
 server/upload_dir/
 server/MMVC_Client_v13/
