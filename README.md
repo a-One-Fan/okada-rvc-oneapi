@@ -1,14 +1,12 @@
 This is a version of RVC with oneAPI support.
 
-So far, this has been tested on WSL2.
-
 # Install:
 
 ### Windows
 
-- Run setup-oneapi.bat
+- Run `setup-oneapi.bat`.
 
-- If you did not have conda installed, accept installing it
+- If you did not have conda installed, accept installing it.
 
 ### Linux
 
@@ -18,6 +16,6 @@ So far, this has been tested on WSL2.
 
 # Run:
 
-`./start-oneapi.bat` for Window or `./start-oneapi.sh` for Linux
+`./start-oneapi.bat` for Windows or `./start-oneapi.sh` for Linux.
 
 [Old README](/README_old.md)
